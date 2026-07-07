@@ -1,9 +1,11 @@
 import os
 
+from migrations.instance.extensions import db, migrate
+
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY")
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI", "sqlite:///app.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
@@ -16,4 +18,6 @@ def create_app(config_class=ProductionConfig):
 
     app = Flask(__name__)
     app.config.from_object(config_class)
+    db.init_app(app)
+    migrate.init_app(app, db)
     return app
