@@ -1,6 +1,7 @@
 from migrations.instance.config import ProductionConfig, create_app
 
 app = create_app(ProductionConfig)
+host = "api-deployment-project.onrender.com"
 
 
 @app.get("/")
