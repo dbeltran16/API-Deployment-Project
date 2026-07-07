@@ -1,1 +1,280 @@
-Single-database configuration for Flask.
+# Flask API Deployment with CI/CD Pipeline
+
+## Project Overview
+
+This project demonstrates how to deploy a Flask REST API using Render, connect it to a PostgreSQL database, and automate deployments using GitHub Actions. The application is configured for production using Gunicorn and environment variables to ensure secure and reliable deployment.
+
+---
+
+# Features
+
+* Flask REST API
+* PostgreSQL database hosted on Render
+* Production configuration using `ProductionConfig`
+* Environment variables for sensitive data
+* Gunicorn production server
+* Swagger API documentation
+* GitHub repository integration
+* Automatic deployment with GitHub Actions (CI/CD)
+
+---
+
+# Technologies Used
+
+* Python
+* Flask
+* SQLAlchemy
+* PostgreSQL
+* Gunicorn
+* Render
+* Git
+* GitHub
+* GitHub Actions
+* Swagger/OpenAPI
+
+---
+
+# Project Structure
+
+```text
+flask-project/
+│
+├── .github/
+│   └── workflows/
+│       └── main.yaml
+│
+├── .env
+├── .gitignore
+├── flask_app.py
+├── config.py
+├── requirements.txt
+├── models.py
+├── routes.py
+├── migrations/
+└── README.md
+```
+
+---
+
+# Deployment Process
+
+### 1. Install Required Packages
+
+```bash
+pip install gunicorn
+pip install psycopg2
+pip install python-dotenv
+```
+
+Update dependencies:
+
+```bash
+pip freeze > requirements.txt
+```
+
+Remove `python-dotenv` from `requirements.txt` if required by the assignment instructions.
+
+---
+
+### 2. Configure Production
+
+* Create a `ProductionConfig` class.
+* Rename `app.py` to `flask_app.py`.
+* Remove `app.run()`.
+* Configure the application to use environment variables.
+
+---
+
+### 3. Environment Variables
+
+Create a `.env` file.
+
+Example:
+
+```text
+SECRET_KEY=your_secret_key
+DATABASE_URI=your_database_uri
+```
+
+Add `.env` to `.gitignore` so sensitive information is not uploaded to GitHub.
+
+---
+
+### 4. Database
+
+Create a PostgreSQL database on Render.
+
+Copy the External Database URL into:
+
+```text
+DATABASE_URI
+```
+
+---
+
+### 5. Deploy to Render
+
+Create a Render Web Service connected to your GitHub repository.
+
+Build Command:
+
+```text
+pip install -r requirements.txt
+```
+
+Start Command:
+
+```text
+gunicorn flask_app:app
+```
+
+Add the following environment variables:
+
+* SECRET_KEY
+* DATABASE_URI
+
+---
+
+### 6. Swagger
+
+Update Swagger:
+
+Host:
+
+```text
+your-api.onrender.com
+```
+
+Schemes:
+
+```text
+https
+```
+
+---
+
+### 7. GitHub Actions CI/CD
+
+Create:
+
+```text
+.github/workflows/main.yaml
+```
+
+Workflow includes:
+
+* Build Job
+* Test Job
+* Deploy Job
+
+The Deploy job runs only after the Test job succeeds.
+
+Repository Secrets:
+
+* RENDER_API_KEY
+* SERVICE_ID
+
+---
+
+# CI/CD Workflow
+
+```text
+Push Code
+    │
+    ▼
+ Build
+    │
+    ▼
+ Test
+    │
+    ▼
+Deploy
+    │
+    ▼
+Render Web Service
+```
+
+Every push to the `main` branch automatically triggers the pipeline.
+
+---
+
+# How to Run Locally
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it.
+
+Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Mac/Linux:
+
+```bash
+source venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Configure the `.env` file.
+
+Run the application.
+
+---
+
+# Lessons Learned
+
+During this project I learned how to:
+
+* Configure Flask for production.
+* Deploy a Flask application to Render.
+* Host a PostgreSQL database.
+* Secure application credentials using environment variables.
+* Configure Gunicorn for production.
+* Use GitHub Actions for Continuous Integration and Continuous Deployment.
+* Automate deployments using Render's API.
+
+---
+
+# Future Improvements
+
+* Add unit tests with higher code coverage.
+* Add Docker support.
+* Add user authentication.
+* Improve API documentation.
+* Add monitoring and logging.
+
+---
+
+# Author
+
+Darlene Beltran
+
+
+---
+
+# Submission
+
+GitHub Repository:
+
+(Add your GitHub repository link here.)
+
+Live Render Application:
+
+https://api-deployment-project.onrender.com
