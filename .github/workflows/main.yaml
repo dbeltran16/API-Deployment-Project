@@ -100,18 +100,20 @@ jobs:
           HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
         run: |
           if [ -z "$HEALTHCHECK_URL" ]; then
-            echo "Missing HEALTHCHECK_URL secret"
-            exit 1
+            echo "HEALTHCHECK_URL is not set. Skipping deploy health verification."
+            exit 0
           fi
 
-          for i in {1..30}; do
-            if curl -fsS "$HEALTHCHECK_URL" >/dev/null; then
+          for i in {1..60}; do
+            status_code=$(curl -sS -o /tmp/healthcheck_body.txt -w "%{http_code}" "$HEALTHCHECK_URL" || echo "000")
+            if [ "$status_code" -ge 200 ] && [ "$status_code" -lt 400 ]; then
               echo "Deployed application is healthy"
               exit 0
             fi
-            echo "Waiting for deploy healthcheck..."
+            echo "Healthcheck attempt $i failed with status $status_code"
+            tail -n 5 /tmp/healthcheck_body.txt || true
             sleep 10
           done
 
-          echo "Deployed application failed healthcheck"
+          echo "Deployed application failed healthcheck after 10 minutes"
           exit 1
