@@ -1,7 +1,9 @@
-from migrations.instance.config import ProductionConfig, create_app
+import os
+
+from app import create_app
+from app.config import ProductionConfig
 
 app = create_app(ProductionConfig)
-host = "api-deployment-project.onrender.com"
 
 
 @app.get("/")
@@ -10,6 +12,7 @@ def index() -> str:
 
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.getenv("PORT", "5000"))
+    app.run(host="0.0.0.0", port=port)
 
     
