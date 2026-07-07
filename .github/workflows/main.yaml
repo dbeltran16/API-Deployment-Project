@@ -60,7 +60,10 @@ jobs:
           pip install pytest
 
       - name: Run tests
-        run: pytest -q
+        env:
+          PYTHONPATH: .
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+        run: python -m pytest -q tests
 
       - name: Smoke test app startup
         run: |
